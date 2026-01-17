@@ -33,7 +33,7 @@ gem "connection_pool", ">= 2.5", "< 3.0"  # Ruby 3.4 compatibility
 # OAuth for Yahoo Fantasy API
 gem "omniauth", "~> 2.1"
 gem "omniauth-oauth2", "~> 1.8"
-gem "omniauth-rails_csrf_protection", "~> 1.0"
+gem "omniauth-rails_csrf_protection", "~> 2.0"
 gem "oauth2", "~> 2.0"
 
 # HTTP client for API requests
