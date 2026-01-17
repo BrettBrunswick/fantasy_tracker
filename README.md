@@ -256,7 +256,3 @@ app/
     ├── sync_standings_job.rb
     └── recalculate_lifetime_stats_job.rb
 ```
-
-## License
-
-[Add your license here]
