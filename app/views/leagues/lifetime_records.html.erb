@@ -1,5 +1,9 @@
 <h1>Lifetime Records - <%= @league.name %></h1>
 
+<% if @seasons.any? %>
+  <p><strong>Seasons:</strong> <%= @seasons.map(&:year).join(", ") %></p>
+<% end %>
+
 <p>
   <%= link_to "Back to League", league_path(@league) %> |
   <%= link_to "Head to Head", head_to_head_league_path(@league) %>
@@ -15,19 +19,23 @@
         <th>Win %</th>
         <th>Points For</th>
         <th>Points Against</th>
+        <th>Trophies</th>
         <th>Playoff Record</th>
+        <th>Championship Record</th>
       </tr>
     </thead>
     <tbody>
       <% @lifetime_records.each_with_index do |record, index| %>
         <tr>
           <td><%= index + 1 %></td>
-          <td><%= record.manager.name %></td>
-          <td><%= record.regular_season_record %></td>
+          <td><%= link_to record.manager.name, manager_path(record.manager) %></td>
+          <td><%= record.total_record %></td>
           <td><%= number_to_percentage(record.win_percentage * 100, precision: 1) %></td>
           <td><%= number_with_precision(record.total_points_for, precision: 2) %></td>
           <td><%= number_with_precision(record.total_points_against, precision: 2) %></td>
+          <td><%= record.trophies_display %></td>
           <td><%= record.playoff_record %></td>
+          <td><%= record.championship_record %></td>
         </tr>
       <% end %>
     </tbody>

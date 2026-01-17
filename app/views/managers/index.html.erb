@@ -1,0 +1,16 @@
+<h1>Managers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @managers.each do |manager| %>
+      <tr>
+        <td><%= link_to manager.name, manager_path(manager) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

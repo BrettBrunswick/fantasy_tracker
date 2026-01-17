@@ -1,0 +1,95 @@
+<h1><%= @manager.name %></h1>
+
+<p><%= link_to "All Managers", managers_path %></p>
+
+<h2>Lifetime Stats (All Leagues)</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <th>Record</th>
+      <td><%= @aggregated_stats[:total_record] %> (<%= number_to_percentage(@aggregated_stats[:total_win_pct] * 100, precision: 1) %>)</td>
+    </tr>
+    <tr>
+      <th>Playoff Record</th>
+      <td><%= @aggregated_stats[:playoff_record] %> (<%= number_to_percentage(@aggregated_stats[:playoff_win_pct] * 100, precision: 1) %>)</td>
+    </tr>
+    <tr>
+      <th>Championship Record</th>
+      <td><%= @aggregated_stats[:championship_record] %> (<%= number_to_percentage(@aggregated_stats[:championship_win_pct] * 100, precision: 1) %>)</td>
+    </tr>
+    <tr>
+      <th>Trophies</th>
+      <td>
+        <% if @aggregated_stats[:first_place].positive? %>🥇<%= @aggregated_stats[:first_place] %><% end %>
+        <% if @aggregated_stats[:second_place].positive? %> 🥈<%= @aggregated_stats[:second_place] %><% end %>
+        <% if @aggregated_stats[:third_place].positive? %> 🥉<%= @aggregated_stats[:third_place] %><% end %>
+        <% if [@aggregated_stats[:first_place], @aggregated_stats[:second_place], @aggregated_stats[:third_place]].all?(&:zero?) %>-<% end %>
+      </td>
+    </tr>
+    <tr>
+      <th>Points For</th>
+      <td><%= number_with_precision(@aggregated_stats[:total_points_for], precision: 2) %></td>
+    </tr>
+    <tr>
+      <th>Points Against</th>
+      <td><%= number_with_precision(@aggregated_stats[:total_points_against], precision: 2) %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>By League</h2>
+
+<% if @lifetime_records.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>League</th>
+        <th>Record</th>
+        <th>Playoff Record</th>
+        <th>Championship Record</th>
+        <th>Trophies</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @lifetime_records.each do |record| %>
+        <tr>
+          <td><%= link_to record.league.name, league_path(record.league) %></td>
+          <td><%= record.total_record %></td>
+          <td><%= record.playoff_record %></td>
+          <td><%= record.championship_record %></td>
+          <td><%= record.trophies_display %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No records yet.</p>
+<% end %>
+
+<h2>Head to Head (All Leagues)</h2>
+
+<% if @head_to_head.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Opponent</th>
+        <th>Record</th>
+        <th>Win %</th>
+        <th>Streak</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @head_to_head.each do |h2h| %>
+        <tr>
+          <td><%= link_to h2h[:opponent].name, manager_path(h2h[:opponent]) %></td>
+          <td><%= h2h[:record] %></td>
+          <td><%= number_to_percentage(h2h[:win_percentage] * 100, precision: 1) %></td>
+          <td><%= h2h[:current_streak] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No head-to-head records yet.</p>
+<% end %>
