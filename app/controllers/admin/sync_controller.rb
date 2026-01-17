@@ -23,15 +23,16 @@ module Admin
     def season
       season = Season.find(params[:season_id])
 
-      YahooApi::StandingsSync.new(current_user).sync_season(season)
-      YahooApi::MatchupSync.new(current_user).sync_season(season)
-      RecalculateLifetimeStatsJob.perform_later(season.league_id)
+      job = SyncSeasonJob.perform_later(current_user.id, season.id)
 
-      redirect_to league_season_path(season.league, season), notice: "Season #{season.year} synced successfully!"
-    rescue YahooApi::Client::AuthenticationError => e
-      redirect_to root_path, alert: "Authentication failed. Please re-login with Yahoo."
-    rescue YahooApi::Client::ApiError => e
-      redirect_to root_path, alert: "Error syncing season: #{e.message}"
+      current_user.user_jobs.create!(
+        job_id: job.job_id,
+        job_type: "Sync #{season.league.name} #{season.year}",
+        status: "pending",
+        started_at: Time.current
+      )
+
+      redirect_to league_season_path(season.league, season), notice: "Sync started for #{season.year}. You'll be notified when complete."
     end
   end
 end

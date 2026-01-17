@@ -17,6 +17,8 @@
 #  index_users_on_yahoo_uid  (yahoo_uid) UNIQUE
 #
 class User < ApplicationRecord
+  has_many :user_jobs, dependent: :destroy
+
   validates :email, presence: true, uniqueness: true
   validates :yahoo_uid, uniqueness: true, allow_nil: true
 

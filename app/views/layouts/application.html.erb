@@ -23,6 +23,13 @@
   </head>
 
   <body>
+    <% if logged_in? %>
+      <div data-controller="job-status">
+        <div data-job-status-target="indicator" class="job-status" style="display: none;">
+          <span data-job-status-target="message"></span>
+        </div>
+      </div>
+    <% end %>
     <%= yield %>
   </body>
 </html>

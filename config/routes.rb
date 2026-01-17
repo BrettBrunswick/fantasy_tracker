@@ -25,6 +25,10 @@ Rails.application.routes.draw do
   # Managers
   resources :managers, only: [:index, :show]
 
+  # Job status
+  get "jobs/status", to: "user_jobs#status"
+  post "jobs/:id/dismiss", to: "user_jobs#dismiss", as: :dismiss_job
+
   # Sync actions
   namespace :admin do
     post "sync/leagues", to: "sync#leagues"
