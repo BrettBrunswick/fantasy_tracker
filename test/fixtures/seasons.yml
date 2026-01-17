@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  league: one
+  year: 1
+  yahoo_league_key: MyString
+  yahoo_game_id: MyString
+
+two:
+  league: two
+  year: 1
+  yahoo_league_key: MyString
+  yahoo_game_id: MyString

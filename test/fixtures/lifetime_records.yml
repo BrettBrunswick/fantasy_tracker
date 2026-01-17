@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  manager: one
+  league: one
+  regular_season_wins: 1
+  regular_season_losses: 1
+  regular_season_ties: 1
+  playoff_wins: 1
+  playoff_losses: 1
+  championships_won: 1
+  championships_lost: 1
+  total_points_for: 9.99
+  total_points_against: 9.99
+
+two:
+  manager: two
+  league: two
+  regular_season_wins: 1
+  regular_season_losses: 1
+  regular_season_ties: 1
+  playoff_wins: 1
+  playoff_losses: 1
+  championships_won: 1
+  championships_lost: 1
+  total_points_for: 9.99
+  total_points_against: 9.99

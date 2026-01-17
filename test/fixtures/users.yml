@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  email: MyString
+  yahoo_uid: MyString
+  access_token: MyText
+  refresh_token: MyText
+  token_expires_at: 2026-01-15 21:40:36
+
+two:
+  email: MyString
+  yahoo_uid: MyString
+  access_token: MyText
+  refresh_token: MyText
+  token_expires_at: 2026-01-15 21:40:36

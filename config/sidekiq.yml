@@ -1,0 +1,26 @@
+:concurrency: 5
+:queues:
+  - default
+  - mailers
+  - sync
+  - stats
+
+:scheduler:
+  :schedule:
+    sync_current_week:
+      cron: '0 6,18 * * 0,1,2'  # 6am and 6pm on Sun, Mon, Tue
+      class: SyncCurrentWeekJob
+      queue: sync
+      description: "Sync current week matchups during NFL season"
+
+    sync_standings:
+      cron: '0 8 * * *'  # 8am daily
+      class: SyncStandingsJob
+      queue: sync
+      description: "Sync league standings daily"
+
+    recalculate_stats:
+      cron: '0 9 * * 3'  # 9am on Wednesdays
+      class: RecalculateLifetimeStatsJob
+      queue: stats
+      description: "Recalculate lifetime and head-to-head stats weekly"

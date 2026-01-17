@@ -1,0 +1,38 @@
+<h1>Head to Head Records - <%= @league.name %></h1>
+
+<p>
+  <%= link_to "Back to League", league_path(@league) %> |
+  <%= link_to "Lifetime Records", lifetime_records_league_path(@league) %>
+</p>
+
+<% if @head_to_head_records.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Manager</th>
+        <th>Opponent</th>
+        <th>Record</th>
+        <th>Win %</th>
+        <th>Points For</th>
+        <th>Points Against</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @head_to_head_records.each do |record| %>
+        <tr>
+          <td><%= record.manager.name %></td>
+          <td><%= record.opponent.name %></td>
+          <td><%= record.wins %>-<%= record.losses %><%= "-#{record.ties}" if record.ties > 0 %></td>
+          <td>
+            <% total = record.wins + record.losses + record.ties %>
+            <%= total > 0 ? number_to_percentage((record.wins.to_f / total) * 100, precision: 1) : "N/A" %>
+          </td>
+          <td><%= number_with_precision(record.total_points_for, precision: 2) %></td>
+          <td><%= number_with_precision(record.total_points_against, precision: 2) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No head to head records calculated yet. Sync some seasons first.</p>
+<% end %>

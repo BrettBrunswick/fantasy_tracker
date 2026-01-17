@@ -1,0 +1,58 @@
+<h1><%= @league.name %></h1>
+
+<p>
+  <%= link_to "Back to Leagues", leagues_path %> |
+  <%= link_to "Lifetime Records", lifetime_records_league_path(@league) %> |
+  <%= link_to "Head to Head", head_to_head_league_path(@league) %>
+</p>
+
+<h2>Seasons</h2>
+
+<% if @seasons.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Teams</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @seasons.each do |season| %>
+        <tr>
+          <td><%= season.year %></td>
+          <td><%= season.teams.count %></td>
+          <td>
+            <%= link_to "View", league_season_path(@league, season) %> |
+            <%= button_to "Sync", admin_sync_season_path(season_id: season.id), method: :post %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No seasons found for this league.</p>
+<% end %>
+
+<% if @lifetime_records.any? %>
+  <h2>Lifetime Records</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Manager</th>
+        <th>Record</th>
+        <th>Points For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @lifetime_records.first(5).each do |record| %>
+        <tr>
+          <td><%= record.manager.name %></td>
+          <td><%= record.wins %>-<%= record.losses %><%= "-#{record.ties}" if record.ties > 0 %></td>
+          <td><%= number_with_precision(record.total_points_for, precision: 2) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <p><%= link_to "View all lifetime records", lifetime_records_league_path(@league) %></p>
+<% end %>

@@ -1,0 +1,50 @@
+<h1>Fantasy Tracker</h1>
+
+<% if logged_in? %>
+  <p>Welcome, <%= current_user.email %>!</p>
+  <%= button_to "Logout", logout_path, method: :delete %>
+
+  <h2>Your Leagues</h2>
+  <% if @leagues.any? %>
+    <ul>
+      <% @leagues.each do |league| %>
+        <li>
+          <%= link_to league.name, league_path(league) %>
+          (<%= league.seasons.count %> seasons)
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No leagues synced yet.</p>
+    <%= button_to "Sync Leagues from Yahoo", admin_sync_leagues_path, method: :post %>
+  <% end %>
+
+  <h2>Recent Matchups</h2>
+  <% if @recent_matchups.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>Week</th>
+          <th>Matchup</th>
+          <th>Score</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @recent_matchups.each do |matchup| %>
+          <tr>
+            <td>Week <%= matchup.week %></td>
+            <td><%= matchup.team_1.name %> vs <%= matchup.team_2.name %></td>
+            <td><%= matchup.team_1_score %> - <%= matchup.team_2_score %></td>
+            <td><%= matchup.matchup_type.humanize %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No matchups recorded yet.</p>
+  <% end %>
+<% else %>
+  <p>Track your Yahoo Fantasy Football league history, standings, and records.</p>
+  <%= button_to "Login with Yahoo", "/auth/yahoo", method: :post, data: { turbo: false } %>
+<% end %>

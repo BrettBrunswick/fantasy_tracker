@@ -1,0 +1,31 @@
+<h1>Leagues</h1>
+
+<%= link_to "Back to Dashboard", root_path %>
+
+<%= button_to "Sync Leagues from Yahoo", admin_sync_leagues_path, method: :post %>
+
+<% if @leagues.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>League Name</th>
+        <th>Seasons</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @leagues.each do |league| %>
+        <tr>
+          <td><%= link_to league.name, league_path(league) %></td>
+          <td><%= league.seasons.count %></td>
+          <td>
+            <%= link_to "Lifetime Records", lifetime_records_league_path(league) %> |
+            <%= link_to "Head to Head", head_to_head_league_path(league) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No leagues synced yet. Click "Sync Leagues from Yahoo" to import your leagues.</p>
+<% end %>

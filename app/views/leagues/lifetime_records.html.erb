@@ -1,0 +1,40 @@
+<h1>Lifetime Records - <%= @league.name %></h1>
+
+<p>
+  <%= link_to "Back to League", league_path(@league) %> |
+  <%= link_to "Head to Head", head_to_head_league_path(@league) %>
+</p>
+
+<% if @lifetime_records.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Manager</th>
+        <th>Record</th>
+        <th>Win %</th>
+        <th>Points For</th>
+        <th>Points Against</th>
+        <th>Playoff Record</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @lifetime_records.each_with_index do |record, index| %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><%= record.manager.name %></td>
+          <td><%= record.wins %>-<%= record.losses %><%= "-#{record.ties}" if record.ties > 0 %></td>
+          <td>
+            <% total = record.wins + record.losses + record.ties %>
+            <%= total > 0 ? number_to_percentage((record.wins.to_f / total) * 100, precision: 1) : "N/A" %>
+          </td>
+          <td><%= number_with_precision(record.total_points_for, precision: 2) %></td>
+          <td><%= number_with_precision(record.total_points_against, precision: 2) %></td>
+          <td><%= record.playoff_wins %>-<%= record.playoff_losses %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No lifetime records calculated yet. Sync some seasons first.</p>
+<% end %>
