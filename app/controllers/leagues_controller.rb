@@ -13,6 +13,7 @@ class LeaguesController < ApplicationController
 
   def lifetime_records
     @league = League.find(params[:id])
+    @seasons = @league.seasons.order(:year)
     @lifetime_records = @league.lifetime_records.includes(:manager).ordered_by_win_percentage
   end
 

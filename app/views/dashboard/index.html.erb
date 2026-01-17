@@ -2,6 +2,7 @@
 
 <% if logged_in? %>
   <p>Welcome, <%= current_user.email %>!</p>
+  <p><%= link_to "All Managers", managers_path %></p>
   <%= button_to "Logout", logout_path, method: :delete %>
 
   <h2>Your Leagues</h2>

@@ -1,8 +1,5 @@
 module YahooApi
   class MatchupSync
-    REGULAR_SEASON_WEEKS = 1..14
-    PLAYOFF_WEEKS = 15..17
-
     def initialize(user)
       @user = user
       @client = Client.new(user)
@@ -162,7 +159,7 @@ module YahooApi
         :championship
       elsif is_consolation
         :consolation
-      elsif is_playoffs || week > 14
+      elsif is_playoffs
         :playoff
       else
         :regular_season

@@ -34,47 +34,77 @@ module Stats
       team_1_ids = teams_1.pluck(:id)
       team_2_ids = teams_2.pluck(:id)
 
-      matchups = Matchup.where(
+      matchups = Matchup.joins(:season).where(
         "(team_1_id IN (?) AND team_2_id IN (?)) OR (team_1_id IN (?) AND team_2_id IN (?))",
         team_1_ids, team_2_ids, team_2_ids, team_1_ids
-      )
+      ).order("seasons.year DESC, matchups.week DESC")
 
       stats = {
         regular_season_wins: 0,
         regular_season_losses: 0,
         regular_season_ties: 0,
         playoff_wins: 0,
-        playoff_losses: 0
+        playoff_losses: 0,
+        current_streak: nil
       }
 
-      matchups.find_each do |matchup|
+      streak_type = nil
+      streak_count = 0
+
+      matchups.each do |matchup|
         manager_1_team = team_1_ids.include?(matchup.team_1_id) ? matchup.team_1 : matchup.team_2
         manager_1_score = matchup.score_for(manager_1_team)
         manager_2_score = matchup.score_for(matchup.opponent_for(manager_1_team))
 
         next if manager_1_score.nil? || manager_2_score.nil?
+        next if manager_1_score.zero? && manager_2_score.zero? # Skip unplayed games
 
         is_playoff = matchup.playoff? || matchup.championship? || matchup.consolation?
 
         if manager_1_score > manager_2_score
           is_playoff ? stats[:playoff_wins] += 1 : stats[:regular_season_wins] += 1
+          if streak_type.nil?
+            streak_type = :win
+            streak_count = 1
+          elsif streak_type == :win
+            streak_count += 1
+          end
         elsif manager_1_score < manager_2_score
           is_playoff ? stats[:playoff_losses] += 1 : stats[:regular_season_losses] += 1
+          if streak_type.nil?
+            streak_type = :loss
+            streak_count = 1
+          elsif streak_type == :loss
+            streak_count += 1
+          end
         else
           stats[:regular_season_ties] += 1 unless is_playoff
         end
       end
 
+      stats[:current_streak] = streak_type ? "#{streak_type == :win ? 'W' : 'L'}#{streak_count}" : "-"
       stats
     end
 
     def inverse_stats(stats)
+      streak = stats[:current_streak]
+      inverted_streak = if streak == "-"
+        "-"
+      elsif streak&.start_with?("W")
+        "L#{streak[1..]}"
+      elsif streak&.start_with?("L")
+        "W#{streak[1..]}"
+      else
+        "-"
+      end
+
       {
         regular_season_wins: stats[:regular_season_losses],
         regular_season_losses: stats[:regular_season_wins],
         regular_season_ties: stats[:regular_season_ties],
         playoff_wins: stats[:playoff_losses],
-        playoff_losses: stats[:playoff_wins]
+        playoff_losses: stats[:playoff_wins],
+        current_streak: inverted_streak
       }
     end
 
@@ -90,7 +120,8 @@ module Stats
         regular_season_losses: stats[:regular_season_losses],
         regular_season_ties: stats[:regular_season_ties],
         playoff_wins: stats[:playoff_wins],
-        playoff_losses: stats[:playoff_losses]
+        playoff_losses: stats[:playoff_losses],
+        current_streak: stats[:current_streak]
       )
 
       record

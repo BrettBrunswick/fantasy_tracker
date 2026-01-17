@@ -18,22 +18,38 @@ module Stats
 
       stats = calculate_stats(manager)
 
+      trophies = calculate_trophies(manager)
+
       record.update!(
         regular_season_wins: stats[:regular_season_wins],
         regular_season_losses: stats[:regular_season_losses],
         regular_season_ties: stats[:regular_season_ties],
         playoff_wins: stats[:playoff_wins],
         playoff_losses: stats[:playoff_losses],
-        championships_won: stats[:championships_won],
-        championships_lost: stats[:championships_lost],
+        championships_won: trophies[:first],
+        championships_lost: trophies[:second],
         total_points_for: stats[:total_points_for],
-        total_points_against: stats[:total_points_against]
+        total_points_against: stats[:total_points_against],
+        first_place_finishes: trophies[:first],
+        second_place_finishes: trophies[:second],
+        third_place_finishes: trophies[:third]
       )
 
       record
     end
 
     private
+
+    def calculate_trophies(manager)
+      teams = manager.teams.joins(:season).where(seasons: { league_id: @league.id })
+      standings = Standing.where(team_id: teams.select(:id))
+
+      {
+        first: standings.where(rank: 1).count,
+        second: standings.where(rank: 2).count,
+        third: standings.where(rank: 3).count
+      }
+    end
 
     def calculate_stats(manager)
       teams = manager.teams.joins(:season).where(seasons: { league_id: @league.id })
@@ -47,8 +63,6 @@ module Stats
         regular_season_ties: 0,
         playoff_wins: 0,
         playoff_losses: 0,
-        championships_won: 0,
-        championships_lost: 0,
         total_points_for: 0,
         total_points_against: 0
       }
@@ -60,10 +74,11 @@ module Stats
         my_score = matchup.score_for(team)
         opponent_score = matchup.score_for(opponent_team)
 
-        stats[:total_points_for] += my_score || 0
-        stats[:total_points_against] += opponent_score || 0
-
         next if my_score.nil? || opponent_score.nil?
+        next if my_score.zero? && opponent_score.zero? # Skip unplayed games
+
+        stats[:total_points_for] += my_score
+        stats[:total_points_against] += opponent_score
 
         case matchup.matchup_type
         when "regular_season"
@@ -74,18 +89,10 @@ module Stats
           else
             stats[:regular_season_ties] += 1
           end
-        when "playoff", "consolation"
+        when "playoff", "consolation", "championship"
           if my_score > opponent_score
             stats[:playoff_wins] += 1
           elsif my_score < opponent_score
-            stats[:playoff_losses] += 1
-          end
-        when "championship"
-          if my_score > opponent_score
-            stats[:championships_won] += 1
-            stats[:playoff_wins] += 1
-          elsif my_score < opponent_score
-            stats[:championships_lost] += 1
             stats[:playoff_losses] += 1
           end
         end

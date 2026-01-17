@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_16_034249) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_17_174728) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -25,6 +25,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_16_034249) do
     t.integer "playoff_losses", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "current_streak"
     t.index ["league_id"], name: "index_head_to_head_records_on_league_id"
     t.index ["manager_id", "opponent_manager_id", "league_id"], name: "idx_h2h_manager_opponent_league", unique: true
     t.index ["manager_id"], name: "index_head_to_head_records_on_manager_id"
@@ -52,6 +53,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_16_034249) do
     t.decimal "total_points_against", precision: 10, scale: 2, default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "first_place_finishes", default: 0
+    t.integer "second_place_finishes", default: 0
+    t.integer "third_place_finishes", default: 0
     t.index ["league_id"], name: "index_lifetime_records_on_league_id"
     t.index ["manager_id", "league_id"], name: "index_lifetime_records_on_manager_id_and_league_id", unique: true
     t.index ["manager_id"], name: "index_lifetime_records_on_manager_id"
@@ -145,6 +149,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_16_034249) do
     t.index ["yahoo_team_key"], name: "index_teams_on_yahoo_team_key", unique: true
   end
 
+  create_table "user_jobs", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "job_id"
+    t.string "job_type"
+    t.string "status"
+    t.text "message"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "index_user_jobs_on_job_id", unique: true
+    t.index ["user_id", "status"], name: "index_user_jobs_on_user_id_and_status"
+    t.index ["user_id"], name: "index_user_jobs_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "yahoo_uid"
@@ -173,4 +192,5 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_16_034249) do
   add_foreign_key "standings", "teams"
   add_foreign_key "teams", "managers"
   add_foreign_key "teams", "seasons"
+  add_foreign_key "user_jobs", "users"
 end

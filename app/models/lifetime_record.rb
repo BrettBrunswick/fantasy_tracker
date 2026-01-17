@@ -5,11 +5,14 @@
 #  id                    :bigint           not null, primary key
 #  championships_lost    :integer          default(0)
 #  championships_won     :integer          default(0)
+#  first_place_finishes  :integer          default(0)
 #  playoff_losses        :integer          default(0)
 #  playoff_wins          :integer          default(0)
 #  regular_season_losses :integer          default(0)
 #  regular_season_ties   :integer          default(0)
 #  regular_season_wins   :integer          default(0)
+#  second_place_finishes :integer          default(0)
+#  third_place_finishes  :integer          default(0)
 #  total_points_against  :decimal(10, 2)   default(0.0)
 #  total_points_for      :decimal(10, 2)   default(0.0)
 #  created_at            :datetime         not null
@@ -50,6 +53,20 @@ class LifetimeRecord < ApplicationRecord
 
   def regular_season_record
     regular_season_ties.positive? ? "#{regular_season_wins}-#{regular_season_losses}-#{regular_season_ties}" : "#{regular_season_wins}-#{regular_season_losses}"
+  end
+
+  def total_record
+    wins = total_wins
+    losses = total_losses
+    regular_season_ties.positive? ? "#{wins}-#{losses}-#{regular_season_ties}" : "#{wins}-#{losses}"
+  end
+
+  def trophies_display
+    parts = []
+    parts << "🥇#{first_place_finishes}" if first_place_finishes.positive?
+    parts << "🥈#{second_place_finishes}" if second_place_finishes.positive?
+    parts << "🥉#{third_place_finishes}" if third_place_finishes.positive?
+    parts.any? ? parts.join(" ") : "-"
   end
 
   def playoff_record

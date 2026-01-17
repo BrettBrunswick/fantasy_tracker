@@ -3,6 +3,7 @@
 # Table name: head_to_head_records
 #
 #  id                    :bigint           not null, primary key
+#  current_streak        :string
 #  playoff_losses        :integer          default(0)
 #  playoff_wins          :integer          default(0)
 #  regular_season_losses :integer          default(0)
@@ -55,5 +56,11 @@ class HeadToHeadRecord < ApplicationRecord
     wins = total_wins
     losses = total_losses
     ties.positive? ? "#{wins}-#{losses}-#{ties}" : "#{wins}-#{losses}"
+  end
+
+  def win_percentage
+    total = total_wins + total_losses + regular_season_ties
+    return 0.0 if total.zero?
+    (total_wins.to_f + regular_season_ties.to_f / 2) / total
   end
 end
