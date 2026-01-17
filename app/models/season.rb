@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: seasons
+#
+#  id               :bigint           not null, primary key
+#  yahoo_league_key :string
+#  year             :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  league_id        :bigint           not null
+#  yahoo_game_id    :string
+#
+# Indexes
+#
+#  index_seasons_on_league_id  (league_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (league_id => leagues.id)
+#
 class Season < ApplicationRecord
   belongs_to :league
   has_many :teams, dependent: :destroy

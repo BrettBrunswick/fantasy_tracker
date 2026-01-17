@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: managers
+#
+#  id         :bigint           not null, primary key
+#  email      :string
+#  name       :string
+#  yahoo_guid :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_managers_on_yahoo_guid  (yahoo_guid) UNIQUE
+#
 class Manager < ApplicationRecord
   has_many :teams, dependent: :destroy
   has_many :seasons, through: :teams

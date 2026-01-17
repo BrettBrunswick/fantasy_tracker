@@ -1,3 +1,35 @@
+# == Schema Information
+#
+# Table name: matchups
+#
+#  id                :bigint           not null, primary key
+#  matchup_type      :integer          default("regular_season")
+#  team_1_score      :decimal(10, 2)
+#  team_2_score      :decimal(10, 2)
+#  week              :integer
+#  yahoo_matchup_key :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  season_id         :bigint           not null
+#  team_1_id         :bigint           not null
+#  team_2_id         :bigint           not null
+#  winner_id         :bigint
+#
+# Indexes
+#
+#  index_matchups_on_season_id           (season_id)
+#  index_matchups_on_season_id_and_week  (season_id,week)
+#  index_matchups_on_team_1_id           (team_1_id)
+#  index_matchups_on_team_2_id           (team_2_id)
+#  index_matchups_on_winner_id           (winner_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (season_id => seasons.id)
+#  fk_rails_...  (team_1_id => teams.id)
+#  fk_rails_...  (team_2_id => teams.id)
+#  fk_rails_...  (winner_id => teams.id)
+#
 class Matchup < ApplicationRecord
   belongs_to :season
   belongs_to :team_1, class_name: "Team"

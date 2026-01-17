@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: leagues
+#
+#  id               :bigint           not null, primary key
+#  name             :string
+#  yahoo_league_key :string
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
 class League < ApplicationRecord
   has_many :seasons, dependent: :destroy
   has_many :teams, through: :seasons

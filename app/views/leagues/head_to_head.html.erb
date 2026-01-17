@@ -11,24 +11,19 @@
       <tr>
         <th>Manager</th>
         <th>Opponent</th>
-        <th>Record</th>
-        <th>Win %</th>
-        <th>Points For</th>
-        <th>Points Against</th>
+        <th>Regular Season</th>
+        <th>Playoffs</th>
+        <th>Overall</th>
       </tr>
     </thead>
     <tbody>
       <% @head_to_head_records.each do |record| %>
         <tr>
           <td><%= record.manager.name %></td>
-          <td><%= record.opponent.name %></td>
-          <td><%= record.wins %>-<%= record.losses %><%= "-#{record.ties}" if record.ties > 0 %></td>
-          <td>
-            <% total = record.wins + record.losses + record.ties %>
-            <%= total > 0 ? number_to_percentage((record.wins.to_f / total) * 100, precision: 1) : "N/A" %>
-          </td>
-          <td><%= number_with_precision(record.total_points_for, precision: 2) %></td>
-          <td><%= number_with_precision(record.total_points_against, precision: 2) %></td>
+          <td><%= record.opponent_manager.name %></td>
+          <td><%= record.regular_season_record %></td>
+          <td><%= record.playoff_record %></td>
+          <td><%= record.overall_record %></td>
         </tr>
       <% end %>
     </tbody>

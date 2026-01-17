@@ -1,3 +1,26 @@
+# == Schema Information
+#
+# Table name: teams
+#
+#  id             :bigint           not null, primary key
+#  name           :string
+#  yahoo_team_key :string
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  manager_id     :bigint           not null
+#  season_id      :bigint           not null
+#
+# Indexes
+#
+#  index_teams_on_manager_id      (manager_id)
+#  index_teams_on_season_id       (season_id)
+#  index_teams_on_yahoo_team_key  (yahoo_team_key) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (manager_id => managers.id)
+#  fk_rails_...  (season_id => seasons.id)
+#
 class Team < ApplicationRecord
   belongs_to :season
   belongs_to :manager

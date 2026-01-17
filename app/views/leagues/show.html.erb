@@ -48,7 +48,7 @@
       <% @lifetime_records.first(5).each do |record| %>
         <tr>
           <td><%= record.manager.name %></td>
-          <td><%= record.wins %>-<%= record.losses %><%= "-#{record.ties}" if record.ties > 0 %></td>
+          <td><%= record.regular_season_record %></td>
           <td><%= number_with_precision(record.total_points_for, precision: 2) %></td>
         </tr>
       <% end %>

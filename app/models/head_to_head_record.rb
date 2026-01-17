@@ -1,3 +1,32 @@
+# == Schema Information
+#
+# Table name: head_to_head_records
+#
+#  id                    :bigint           not null, primary key
+#  playoff_losses        :integer          default(0)
+#  playoff_wins          :integer          default(0)
+#  regular_season_losses :integer          default(0)
+#  regular_season_ties   :integer          default(0)
+#  regular_season_wins   :integer          default(0)
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  league_id             :bigint           not null
+#  manager_id            :bigint           not null
+#  opponent_manager_id   :bigint           not null
+#
+# Indexes
+#
+#  idx_h2h_manager_opponent_league                    (manager_id,opponent_manager_id,league_id) UNIQUE
+#  index_head_to_head_records_on_league_id            (league_id)
+#  index_head_to_head_records_on_manager_id           (manager_id)
+#  index_head_to_head_records_on_opponent_manager_id  (opponent_manager_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (league_id => leagues.id)
+#  fk_rails_...  (manager_id => managers.id)
+#  fk_rails_...  (opponent_manager_id => managers.id)
+#
 class HeadToHeadRecord < ApplicationRecord
   belongs_to :manager
   belongs_to :opponent_manager, class_name: "Manager"

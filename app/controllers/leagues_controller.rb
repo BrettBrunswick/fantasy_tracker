@@ -8,18 +8,18 @@ class LeaguesController < ApplicationController
   def show
     @league = League.find(params[:id])
     @seasons = @league.seasons.order(year: :desc)
-    @lifetime_records = @league.lifetime_records.includes(:manager).order(wins: :desc)
+    @lifetime_records = @league.lifetime_records.includes(:manager).ordered_by_wins
   end
 
   def lifetime_records
     @league = League.find(params[:id])
-    @lifetime_records = @league.lifetime_records.includes(:manager).order(wins: :desc)
+    @lifetime_records = @league.lifetime_records.includes(:manager).ordered_by_win_percentage
   end
 
   def head_to_head
     @league = League.find(params[:id])
     @head_to_head_records = @league.head_to_head_records
-      .includes(:manager, :opponent)
-      .order("wins DESC")
+      .includes(:manager, :opponent_manager)
+      .order(regular_season_wins: :desc)
   end
 end
