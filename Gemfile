@@ -27,7 +27,7 @@ gem "solid_cable"
 
 # Background jobs with Sidekiq
 gem "sidekiq", "~> 7.3"
-gem "sidekiq-scheduler", "~> 5.0"
+gem "sidekiq-scheduler", "~> 6.0"
 gem "connection_pool", ">= 2.5", "< 3.0"  # Ruby 3.4 compatibility
 
 # OAuth for Yahoo Fantasy API
